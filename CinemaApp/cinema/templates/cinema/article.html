@@ -1,0 +1,14 @@
+{% extends 'cinema/base.html' %}
+{% block title %}Article{% endblock %}
+{% block content %}
+<div>
+    <div class="pageText">
+        <h1>{{article.title}}</h1>
+        <i>{{article.date}}</i>
+        <img class="articlePhoto" src="{{article.photo.url}}">
+        <span style="white-space: pre-line">
+            {{article.text}}
+        </span>
+    </div>
+</div>
+{% endblock %}

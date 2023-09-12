@@ -1,0 +1,70 @@
+{% extends 'cinema/base.html' %}
+{%load static%}
+{% block title %}Home page{% endblock %}
+{% block content %}
+<div>
+    <marquee >♥♥♥WELCOME TO OUR CINEMA, {{user.username}}♥♥♥&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Use promocode "CULTUREFOREVER" to buy ticket's for any movie with 30% discount. Allowed only in ticket office since 18:00 to 23:00.</marquee>
+    <br><br>
+    <h1>Home page</h1>
+    <h2>Newest movies</h2>
+    <section class = "newestMovies">
+        {%for movie in newest%}
+            <a href = "{% url 'movie' movie_id=movie.id %}" class="homePageMovie">
+                <img src = "{{movie.poster.url}}" class="moviePoster">
+                <h2>{{movie}}</h2>
+            </a>
+        {%endfor%}
+    </section>
+    <h2>Today's sessions</h2>
+    {%if day.0%}
+        {% for movie in day %}
+            {% if movie%}
+            <div class="dateSessionWrapper">
+                <a class="nonHeaderLink" >
+                    <h3>
+                        {{movie.0.movie}}
+                    </h3>
+                    </a>
+                {% for session in movie%}
+                    <a href="{% url 'session' session_id=session.id %}">
+                        <button class="sessionButton">
+                            {{session.startTime.hour}}:{%if session.startTime.minute == 0 %}00{%else%}{{session.startTime.minute}}{%endif%} /
+                            {{session.type}} /
+                            {{session.price}} $
+                        </button>
+                    </a>
+                {%endfor%}
+            </div>
+            {% endif%}
+        {% endfor %}
+    {%else%}
+        <b>No sessions today</b>
+    {%endif%}
+    <h2>Last news</h2>
+    {%for item in news%}
+        <div class = "newsBlock">
+            <span class = "newsDate">{{item.date}}</span>
+            <a href="{% url 'article' news_id=item.id %}"><h3>{{item.title}}</h3></a>    
+        </div>
+    {%endfor%}
+    <h2>Last reviews</h2>
+    <section class="reviewsBlock">
+        {%for review in reviews%}
+            <div class = "reviewBlock">
+                <span class="reviewRate">{{review.rate}} ★</span>
+                <h3 style="margin: 0px; flex-direction: row; display: flex;">
+                    {{review.author}}:<a href = "{% url 'movie' movie_id=review.movie.id %}"><h3 style="margin: 0px;">{{review.movie}}</h3></a>
+                </h3>
+                <span class = "reviewsDate">{{review.date}}</span>
+                <textarea readonly draggable="false" class="reviewText">{{review.text}}</textarea> 
+            </div>
+        {%endfor%}
+    </section>
+    <h2>Our partners</h2>
+    <div class="partners">
+        <a href = 'https://www.bsuir.by/ru/fksis'><img src=/image/fksis.svg class="partnerLogo"></a>
+        <a href = 'https://www.bsuir.by/ru/fksis/studsovet'><img src=/image/ss.svg class="partnerLogo"></a>
+    </div>
+    <br>
+</div>
+{% endblock %}

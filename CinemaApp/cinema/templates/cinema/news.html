@@ -1,0 +1,13 @@
+{% extends 'cinema/base.html' %}
+{% block title %}News{% endblock %}
+{% block content %}
+<div>
+    <h1>News</h1>
+    {%for item in news%}
+        <div class = "newsBlock">
+            <span class = "newsDate">{{item.date}}</span>
+            <a href="{% url 'article' news_id=item.id %}"><h3>{{item.title}}</h3></a>      
+        </div>
+    {%endfor%}
+</div>
+{% endblock %}

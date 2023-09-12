@@ -1,0 +1,85 @@
+{% extends 'cinema/base.html' %}
+{% block title %}Sessions page{% endblock %}
+{% block content %}
+<div>
+    <h1>Sessions</h1>
+    <div class="sessionPage">
+        <div>
+            {% for day in sessions%}
+                <h3>{{day.0.0.startDate}}</h3>
+                {% for movie in day %}
+                    {% if movie%}
+                        
+                    <div class="dateSessionWrapper">
+                        <a class="nonHeaderLink" >
+                            <h2 style="margin:0px">
+                                {{movie.0.movie}}
+                            </h2>
+                         </a>
+                        {% for session in movie%}
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'session' session_id=session.id %}">
+                                <button class="sessionButton">
+                                    {{session.startTime.hour}}:{%if session.startTime.minute == 0 %}00{%else%}{{session.startTime.minute}}{%endif%} /
+                                    {{session.type}} /
+                                    {{session.price}} $
+                                </button>
+                            </a>
+                            {% else %}
+                            <a href="/login">
+                                <button class="sessionButton">
+                                    {{session.startTime.hour}}:{%if session.startTime.minute == 0 %}00{%else%}{{session.startTime.minute}}{%endif%} /
+                                    {{session.type}} / 
+                                    {{session.price}} $
+                                </button>
+                            </a>
+                            {% endif %}
+                        {%endfor%}
+                    </div>
+                    {% endif%}
+                {% endfor %}
+            {% endfor %}
+        </div>
+
+        <form method="get" class="filterWrapper" id="filterForm">
+            <div class="priceFilter">
+                <span class="detailTextDark">Price</span>
+                <div class="inputBlock">
+                    <span class="inputDescription">from:</span> 
+                    <input type="number" name="pfrom" id="filterInput" step = '0.01' value="{{pfrom}}" min="0">
+                </div>
+                <div class="inputBlock">
+                    <span class="inputDescription">to:</span>
+                    <input type="number" name="pto" id="filterInput" step = '0.01' value="{{pto}}" min="0">
+                </div>
+            </div>
+            <hr class="filterSeparator" noshade color="#f5f5f5"/>
+            <div class="formatFilter">
+                <span class="detailTextDark">Format</span>
+                <div class="inputBlock">
+                    <span class="inputDescription">Any:</span>
+                    <input id="formatChoise1" type="radio" name="formatAny" id="filterInput">
+                    <span class="inputDescription">2D:</span>
+                    <input id="formatChoise2" type="radio" name="format2D" id="filterInput">
+                    <span class="inputDescription">3D:</span>
+                    <input id="formatChoise3" type="radio" name="format3D" id="filterInput">
+                </div>
+            </div>
+            <hr class="filterSeparator" noshade color="#f5f5f5"/>
+            <div class="dateFilter">
+                <span class="detailTextDark">Date</span>
+                <div class="inputBlock">
+                    <span class ="inputDescription">Date:</span>
+                    <input type="date" name="date" id="filterInput" value="{{date}}">
+                </div>
+            </div>
+            <div class="inputBlock">
+                <input type="submit" value="Filter" id="filterButton">
+                <a href = "/sessions" id="filterButton">
+                    Reset
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'cinema/base.html' %}
+{% block title %}Sessions page{% endblock %}
+{% block content %}
+<div>
+    <div id="player"></div>
+    <h0>
+        {{movie}}
+    </h0>
+    <div class = "movieFirstBlock">
+        <img src = "{{movie.poster.url}}" class="moviePoster">
+        <ul class="movieStats" type="square">
+            <li>
+                Country: {{movie.country}}
+            </li>
+            <li>
+                Budget: {{movie.budget}} $
+            </li>
+            <li>
+                Duration: {{movie.duration.hour}}:{{movie.duration.minute}}:00
+            </li>
+            <li>
+                Genres: 
+                {% for genre in movie.genre.all %}
+                    {{genre}}
+                {% endfor %}
+            </li>
+        </ul>
+        <p class = "rating">
+            {{movie.rating}} ★
+        </p>
+
+    </div>
+    <h2>Descripton:</h2>
+    <p class="movieDescriptionText">{{movie.description}}</p>
+    <h2>Sessions:</h2>
+    {% for day in sessions%}
+    {% if day.0 %}
+    <h3>{{day.0.startDate}}</h3>
+    <div class ="dateSessionWrapper">
+        <h2 style="margin: 0px;">
+            {{movie}}
+        </h2>
+        {% for session in day%}
+        {% if user.is_authenticated %}
+        <a href="{% url 'session' session_id=session.id %}">
+            <button class="sessionButton">
+                {{session.startTime.hour}}:{%if session.startTime.minute == 0 %}00{%else%}{{session.startTime.minute}}{%endif%} /
+                {{session.type}} /
+                {{session.price}} $
+            </button>
+        </a>
+        {% else %}
+        <a href="/login">
+            <button class="sessionButton">
+                {{session.startTime.hour}}:{%if session.startTime.minute == 0 %}00{%else%}{{session.startTime.minute}}{%endif%} /
+                {{session.type}} /
+                {{session.price}} $
+            </button>
+        </a>
+        {% endif %}
+        {%endfor%}
+    </div>
+    {% endif%}
+    {% endfor %}
+    <h2>
+        Trailer:
+    </h2>
+    <iframe src = "http://www.youtube.com/embed/{{movie.trailerId}}?enablejsapi=1&origin=http://example.com" type="text/html" width="980" height="550" frameborder="0"></iframe>
+    <br><br>
+    
+</div>
+{% endblock %}

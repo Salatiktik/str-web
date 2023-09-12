@@ -1,0 +1,61 @@
+{% extends 'cinema/base.html' %}
+{% block title %}Sessions page{% endblock %}
+{% block content %}
+<div>
+    <h1>Movies</h1>
+    <div class="moviesPage">
+        <div>
+            {% for movie in movies%}
+            <a class = "nonHeaderLink" href = "{% url 'movie' movie_id=movie.id %}">
+                <div class = "movieBlock">
+                    <img src = "{{movie.poster.url}}" class="moviePoster">
+                    <div class = "movieDescription">
+                        <h0>{{movie}}</h0>
+                        <p class="movieGenres">
+                            {% for genre in movie.genre.all %}
+                                {{genre}}
+                            {% endfor %}
+                        </p>
+                        <p>
+                            {{movie.description}}
+                        </p>
+                    </div>
+                    <p class = "rating">
+                        {{movie.rating}} ★
+                    </p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        <form method="get" class="filterWrapper" id="filterForm">
+            <div class="priceFilter">
+                <span class="detailTextDark">Rating</span>
+                <div class="inputBlock">
+                    <span class="inputDescription">from:</span> 
+                    <input type="number" name="rfrom" id="filterInput" step = '0.01' value="{{rfrom}}" min ="0" max="10">
+                </div>
+                <div class="inputBlock">
+                    <span class="inputDescription">to:</span>
+                    <input type="number" name="rto" id="filterInput" step = '0.01' value="{{rto}}" min ="0" max="10">
+                </div>
+            </div>
+            <hr class="filterSeparator" noshade color="#f5f5f5"/>
+            <div class="formatFilter">
+                <span class="detailTextDark">Genres</span>
+                {%for genre in genres%}
+                <div class="inputBlock">
+                    <input type="checkbox" name="{{genre}}checkbox">
+                    <span class="inputGenre">{{genre}}</span>
+                </div>
+                {%endfor%}
+            </div>
+            <div class="inputBlock">
+                <input type="submit" value="Filter" id="filterButton">
+                <a href = "/movies" id="filterButton">
+                    Reset
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

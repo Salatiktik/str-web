@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://fonts.cdnfonts.com/css/din-pro-cond" rel="stylesheet">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title%}Title{% endblock%}</title>
+
+</head>
+<style>
+    body{
+        font-family:'DIN Pro Regular', sans-serif;
+        padding: 0;
+        margin: 0;
+        background-color: #cfe4f1;
+        color:#292929;   
+    }
+    
+    marquee{
+        width:1280px;
+        font-size: 15pt;
+        height: 30px;
+        position: absolute;
+        left:96px;
+        top:65.5px;
+        color:#e9fff1;
+        background-color: #98b0e7;
+    }
+
+    .header{
+        width: 100%;
+        background-color:#282828;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .footer{
+        width: 100%;
+        height: 200px;
+        background-color:#0d0d24;
+        display: flex;
+        justify-content: center;
+    }
+
+    .headerBlock{
+        width: fit-content;
+        display: flex;
+        justify-content: start;
+    }
+    .link{
+        color: #f5f5f5;
+        font-size: 15pt;
+        display: flex;
+        margin: 20px;
+        text-decoration: none;
+    }
+    
+    .nonHeaderLink{
+        color: #282828;
+        text-decoration: none;
+    }
+    
+    .errorMessage{
+        margin: 0px;
+        color: #ffffff;
+    }
+
+
+    #id_username,#id_password,#id_passwordConfirm,#id_email,.input{
+        height: 25px;
+        border-radius: 7.5px;
+        width: 300px;
+        margin: 10px;
+        border: none;
+        font-family:'DIN Pro Regular', sans-serif;
+        font-size: 20px;
+        color: #464646;
+        padding: 5px;
+    }
+
+    .wrapper{
+        align-items: center;
+        margin: 100px;
+        width: fit-content;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        border-radius: 20px;
+        background-color: #00583f7c;
+    }
+    .content{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .container{
+        display: flex;
+        justify-content: center;
+        width: 1280px;
+        min-height: 720px;
+        background-color: #ffffff;
+    }
+    .button{
+        width: fit-content;
+        font-family: 'DIN Pro Regular', sans-serif;
+        padding: 6px 30px;
+        margin: 10px 0px 0px 0px;
+        font-size: 15pt;
+        background-color: #f5f5f5;
+        color: #464646;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+    }
+    .detailText{
+        font-size: 12px;
+        color: #f5f5f5;
+        margin: 10px 10px 0px 10px;
+        align-self: flex-start;
+    }
+    .detailTextDark{
+        font-size: 14px;
+        font-family: 'DIN Pro Bold';
+        margin: 10px 10px 0px 10px;
+        align-self: flex-start;
+    }
+    .marckedLink{
+        color: #9cffbd;
+        font-size: 15pt;
+        display: flex;
+        margin: 20px 20px 20px 0px;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    
+    h0{
+        font-family: 'DIN Pro Bold', sans-serif;
+        font-size: 40pt;
+    }
+    h1{
+        margin: 20px 0px;
+        font-family: 'DIN Pro Bold', sans-serif;
+        font-size: 30pt;
+    }
+    h2{
+        font-size: 20pt;
+        font-family: 'DIN Pro Bold';
+        margin: 20px 0px;
+    }
+    h3{
+        font-size: 20pt;
+        font-family: 'DIN Pro Regular';
+        color:#292929;  
+        text-decoration: none;
+    }
+    
+
+    .dateSessionWrapper{
+        border-radius: 20px;
+        min-width: 700px;
+        background-color: #bcf1ce;
+        flex-direction: row;
+        display: flex;
+        margin: 5px;
+        padding: 20px;
+    }
+
+    .ticketData,.dateSession{
+        font-family: 'DIN Pro Bold', sans-serif;
+        font-size: 20pt;
+    }
+
+    .session{
+        margin: 0px 20px 0px 20px;
+        font-size: 20pt;
+        color:#292929;
+        font-family: 'DIN Pro Black', sans-serif;
+        text-decoration: none;
+    }
+    .ticketQr{
+        width: 100px;
+        height: 100px;
+        margin: 0px 0px 30px 0px;
+    }
+    .sessionButton{
+        width: fit-content;
+        margin: 0px 10px;
+        font-family: 'DIN Pro Regular', sans-serif;
+        padding: 6px 10px;
+        font-size: 15pt;
+        background-color: #f5f5f5;
+        color: #464646;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+    }
+    .seatsBlock{
+        margin: 50px 0px;
+        background-color: #3b3b3b;
+        display: flex;
+        border-radius: 20px;
+        padding: 20px;
+        align-items: center;
+        justify-content: space-around;
+        flex-direction: column;
+    }
+    .seatsRow{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .seat{
+        height: 30px;
+        width: 30px;
+        align-items: center;
+        justify-content: center;
+        background-color: #ffffff;
+        color: #3f3f3f;
+        margin: 5px;
+        font-family: 'DIN Pro Bold', sans-serif;
+        border-radius: 5px;
+        padding: 3px;
+        font-size: 15pt;
+        display: flex;
+    }
+    .occupiedSeat{
+        border-radius: 5px;
+        height: 30px;
+        width: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #c0c0c0;
+        background-color: #3f3f3f;
+        margin: 5px;
+        padding: 3px;
+        font-size: 12pt;
+    }
+    .rowMark{
+        height: 30px;
+        align-items: center;
+        justify-content: center;
+        margin: 20px;
+        font-size: 8pt;
+        color: #f5f5f5;
+    }
+    .ticketCircleRow{
+        justify-content: space-between;
+        width: 400px;
+        flex-direction: row;
+        display: flex;
+    }
+    .ticketCircle{
+        background-color: #ffffff;
+        border-radius: 0px 0px 25px 25px;
+        width: 50px;
+        height: 40px;
+    }
+    .ticketCircleReverse{
+        background-color: #ffffff;
+        border-radius: 25px 25px 0px 0px;
+        width: 50px;
+        height: 40px;
+    }
+    .ticket{
+        margin: 30px;
+        padding: 0px 30px;
+        width: 400px;
+        height: 800px;
+        justify-content: space-between;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: #97edb6;
+    }
+    .border{
+        width: 400px;
+        height: 3px;
+        background-color: #bcf1ce;
+    }
+    
+
+    .information{
+        margin: 10px 0px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .lycense{
+        font-size: small;
+        font-weight: lighter;
+        margin: 0px 30px 0px 0px;
+    }
+    .profileTicket{
+        margin: 20px 0px;
+        width: 800px;
+        height: 150px;
+        background-color: #9cffbd;
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .profileTIcketCircles{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        height: 120px;
+    }
+    .profileTicketCircle{
+        background-color: #ffffff;
+        border-radius: 0px 15px 15px 0px;
+        width: 22px;
+        height: 30px;
+    }
+    .profileTicketCircleReverse{
+        background-color: #ffffff;
+        border-radius: 15px 0px 0px 15px;
+        width: 23px;
+        height: 30px;
+    }
+    .profileTicketMovie{
+        font-size: 40pt;
+        font-family: 'DIN Pro Bold', sans-serif;
+    }
+    .profileTicketData{
+        align-items: center;
+        flex-direction: row;
+        display: flex;
+    }
+    .profileTicketDescription{
+        margin: 40px;
+        display: flex;
+        flex-direction: column;
+    }
+    .profileTicketDate,.rating{
+        font-size: 25pt;
+        font-family: 'DIN Pro Bold', sans-serif;
+    }
+    .profileTicketSeat{
+        font-size: 20pt;
+        font-family: 'DIN Pro Bold', sans-serif;
+    }
+    .ticketBody{
+        padding: 0px 30px 30px 30px;
+        width: 400px;
+        height: 450px;
+        justify-content: space-between;
+        display: flex;
+        flex-direction: column;
+    }
+    .ticketsBlock{
+        flex-direction: row;
+        min-width: 900px;
+    }
+    .ticket{
+        font-size: 40pt;
+        margin: 20px 0px;
+        color:#292929;
+        font-family: 'DIN Pro Black', sans-serif;
+        text-decoration: none;
+    }
+    .moviePoster{
+        width: 200px;
+        height: 300px;
+        border-radius: 10px;
+    }
+    .movieDescription{
+        background-color: #d7f8ed;
+        border-radius: 10px;
+        padding: 10px;
+        width: 550px;
+        display: flex;
+        flex-direction: column;
+    }
+    .movieBlock{
+        width: 900px;
+        border-radius: 20px;
+        padding: 20px;
+        margin: 20px 0px;
+        background-color: #d7f8ed;
+        flex-direction: row;
+        justify-content: space-between;
+        display: flex;
+    }
+    
+    .movieFirstBlock{
+        margin: 30px 0px;
+        flex-direction: row;
+        display: flex;
+        justify-content: space-between;
+    }
+    .movieGenres{
+        font-family: 'DIN Pro Bold';
+        font-size: 15pt;
+        margin: 5px 0px;
+    }
+    .movieStats{
+        margin: 0px 270px 0px 0px;
+        justify-content: end;
+        flex-direction: column;
+        display: flex;
+        font-size: 20pt;
+    }
+    .movieDescriptionText{
+        font-size: 15pt;
+        width: 900px;
+    }
+    
+    .sessionPage{
+        justify-content: row;
+        display: flex;
+    }
+    .moviesPage{
+        justify-content: row;
+        display: flex;
+    }
+    .filterWrapper{
+        width: 200px;
+        margin: 35px 0px 0px 20px;
+        height: fit-content;
+        padding: 10px;
+        background-color: #d3f6df;
+        border-radius: 20px;
+        position: sticky;
+    }
+    #filterInput{
+        border-radius: 8px;
+        border: none;
+        font-family: 'DIN Pro Regular';
+        width: 100px;
+        margin: 0px 8px;
+    }
+    #filterButton{
+        width: fit-content;
+        font-family: 'DIN Pro Regular', sans-serif;
+        padding: 6px 30px;
+        align-self: center;
+        display: flex;
+        margin: 5px;
+        font-size: 10pt;
+        background-color: #f5f5f5;
+        color: #464646;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+    }
+    .inputDescription{
+        width: 50px;
+        display: flex;
+        justify-content: end;
+    }
+    .priceFilter{
+        margin: 5px;
+    }
+    .inputBlock{
+        margin: 10px 0px;
+        display: flex;
+        flex-direction: row;
+    }
+    .filterSeparator{
+        background-color: #97edb6;
+        margin: 8px 0px;
+        width: 200px;
+        height: 3px;
+    }
+    .newestMovies{
+        display: flex;
+        flex-direction: row;  
+        background-color: #c6cceb;
+        width:900px;
+        padding: 15px;
+        border-radius: 10px;
+    }
+    .homePageMovie{
+        margin: 0px 30px 0px 0px;
+        display: flex;
+        flex-direction: column;
+        text-decoration: none;
+        color:#292929;  
+    }
+    
+    .newsBlock{
+        display: flex;
+        flex-direction: row;
+        margin: 20px 0px ;
+        align-items: center;
+
+    }
+
+    .reviewsBlock{
+        display: flex;
+        flex-direction: row;
+        margin: 20px 0px ;
+        align-items: start;
+        height: fit-content;
+    }
+    .reviewBlock{
+        width: 300px;
+        border-radius: 10px;
+        padding: 10px;
+        background-color: #9cffbd;
+        margin: 0px 20px 0px 0px;
+    }
+    .reviewRate{
+        position: relative;
+        left:270px;
+    }
+
+    .reviewText{
+        font-size: 15px;
+        font-weight: lighter;
+        width: 290px;
+        height:150px;
+        background-color: #ecfff2;
+        border:none;
+        resize: none;
+    }
+
+    .reviewsDate,.newsDate{
+        font-size: 15pt;
+        font-family: 'DIN Pro Light';
+        margin:0px 30px 0px 0px;
+    }
+    
+
+    .partnerLogo{
+        margin: 0px 100px 0px 0px;
+        height: 70px;
+        filter: invert(18%) sepia(57%) saturate(1082%) hue-rotate(204deg) brightness(80%) contrast(97%);
+    }
+    .footerContent{
+        width:1280px;
+        margin:30px 0px;
+        display: flex;
+        justify-content: space-between;
+    }
+    .footerBlock{
+        width:400px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        color: #f5f5f5;
+    }
+    .footerLogo{
+        margin:0px 20px;
+    }
+    .footerLink{
+        color:#f5f5f5;
+        margin:100px 10px;
+        text-decoration: underline;
+    }
+    .pageText{
+        width: 900px;
+        font-size: 20pt;
+        margin: 20px 0px;
+    }
+    .articlePhoto,.certificate{
+        width: 900px;
+        height: 450px;
+        margin: 30px 0px;
+    }
+
+    .question{
+        font-size: 20pt;
+        font-family: 'DIN Pro Bold';
+        
+    }
+    .questionBlock{
+        font-size: 20pt;
+        font-family: 'DIN Pro Bold';
+        background-color: #424242;
+        color: #f5f5f5;
+        padding: 10px;
+        cursor: pointer;
+        border-radius: 10px;
+        margin-top:20px;
+    }
+    .answerBlock{
+        font-size: 18pt;
+        font-family: 'DIN Pro Italic';
+        background-color: #9baedb;     
+        padding: 10px;
+        cursor: pointer;
+        border-radius: 10px;
+    }
+</style>
+<body>
+    <div class="header">
+        <nav class="headerBlock">
+            <a class="link" href="/home">Home</a>
+            <a class="link" href="/sessions">Sessions</a>
+            <a class="link" href="/movies">Movies</a>
+            <a class="link" href="/news">News</a>
+        </nav>
+        <nav class="headerBlock">
+            {% if user.is_authenticated %}
+            <a class="link" href="/profile">Hi,
+                <a class="marckedLink" href="/profile">
+                    {{user.username}}
+                </a> 
+            </a>
+            <a class="link" href="/logout">Logout</a>
+            {% else %}
+            <a class="link" href="/login">Login</a>
+            <a class="link" href="/sign-up">Sign up</a>
+            {% endif %}
+        </nav>
+    </div>
+    <div class="content">
+        <div class="container">
+        {%block content%}
+        {% endblock%}
+        </div>
+    </div>
+    <div class="footer">
+        <div class="footerContent">
+            <div class = "footerBlock">
+                <img class="footerLogo" src = '/image/da.png' height="110px">
+                <i>
+                    Our cinema is the oldest cinema in this city. Culter of this place is our honor, our job! Everyday we work to make people happy. Wanna join us - hurry up, dear friend!
+                </i>
+                    
+            </div>
+            <div class = "footerBlock">
+                <a href = '/about' class="footerLink">About us</a>
+                <a href = '/vacancy' class="footerLink">Vacancy</a>
+                <a href = '/contacts' class="footerLink">Contacts</a>
+            </div>
+            <div class = "footerBlock">            
+                <a href = '/FAQ' class="footerLink">FAQ</a>
+                <a href = '/promo' class="footerLink">Promocodes</a>
+                <a href = '/privacy_policy' class="footerLink">Privacy policy</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

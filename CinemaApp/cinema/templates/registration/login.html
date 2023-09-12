@@ -1,0 +1,24 @@
+{% extends '../cinema/base.html' %}
+{% block title %}Login{% endblock %}
+{% block content%}
+<form method="post">
+    {%csrf_token%}
+
+    <div class = "wrapper">
+        <div class="formTitle">Login</div>
+        <div class="detailText">Username:</div>
+        {{form.username}}
+        <div class="detailText">Password:</div>
+        {{form.password}}
+        <div class="errorMessage">{{error}}</div>
+        <div class="errorMessage">
+            {% for i in error %}
+            {{i}}
+            {% endfor %}
+        </div>
+        <button class ="button" type="submit">Login</button>
+        <p>Dont have an account? Create a new one <a class ="nonHeaderLink" href="/sign-up">Here</a>
+        </p>
+    </div>
+</form>
+{% endblock %}

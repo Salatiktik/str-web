@@ -1,0 +1,21 @@
+{% extends 'cinema/base.html' %}
+{% block title %}FAQ{% endblock %}
+{% block content %}
+
+<div>
+    <div class="pageText">
+        <h1>Frequently Asked Questions</h1>
+        <div style="display:flex;flex-direction: column;">
+            {%for q in faq%}
+            <details>
+                <summary class="questionBlock">
+                    {{q.date}} {{q.question}}
+                </summary>
+                <div class="answerBlock">{{q.answer}}</div>
+            </details>
+            {%endfor%}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

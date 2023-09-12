@@ -1,0 +1,49 @@
+{% extends 'cinema/base.html' %}
+{% block title %}Ticket confirmation page{% endblock %}
+{% block content %}
+<div>
+    <form method="post">
+        {%csrf_token%}
+        <div class = "ticket">
+            <div class ="ticketCircleRow">
+                <div class="ticketCircle"></div>
+                <div class="ticketCircle"></div>
+                <div class="ticketCircle"></div>
+                <div class="ticketCircle"></div>
+                <div class="ticketCircle"></div>
+                <div class="ticketCircle"></div>
+            </div>
+            <h0>Ticket</h0>
+            <div class = "border"></div>
+            <div class ="ticketBody">
+                <span class = "ticketMovieTitle">{{session.movie}} / {{session.type}}</span>
+                <ul>
+                    <li class = "ticketData">{{session.startDate}},{{session.startTime}}</li>
+                    <li class = "ticketData">Visitor: {{user.username}}</li>
+                    <li class = "ticketData">Seat: {{seat.row}} row, {{seat.number}} place</li>
+                    <li class = "ticketData">Seat type: {{seat.type}}</li>
+                    <li class="ticketData ">Cost: {{cost}} $</li>
+                </ul>
+                <div class="information">
+                    <div class="lycense">
+                        CULTURE CINEMA, USA, Green city, Lime drive, 53, 92101, green.cinema@gmail.com
+                    </div>
+                    <img class="qrTicket" src="{{qr.url}}">
+                </div>  
+            </div>  
+            
+            <div class = "border"></div>
+            <button type="submit" class="button">Buy</button>
+
+            <div class ="ticketCircleRow">
+                <div class="ticketCircleReverse"></div>
+                <div class="ticketCircleReverse"></div>
+                <div class="ticketCircleReverse"></div>
+                <div class="ticketCircleReverse"></div>
+                <div class="ticketCircleReverse"></div>
+                <div class="ticketCircleReverse"></div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
