@@ -1,0 +1,19 @@
+{% extends 'cinema/base.html' %}
+{% block title %}statistic{% endblock %}
+{% block content %}
+<div>
+    <h1>Statistic's</h1>
+    <div class="pageText">
+        <h2>Diagarams</h2>
+        {{tm|safe}}
+        {{td|safe}}
+        <h2>Values</h2>
+        <h3>Users: {{au}}</h3>
+        <h3>Tickets bought: {{at}}</h3>
+        <h3>Sessions shown: {{ass}}</h3>
+        <h3>Movies shown: {{am}}</h3>
+        <h3>Money gain: {{mg}}$</h3>
+    </div>
+</div>
+{% endblock %}
+

@@ -5,22 +5,26 @@
     <h1>{{movie}}:{{session.type}}</h1>
     <h3>{{session.startDate}},{{session.startTime}}</h3>
     <section class = "seatsBlock">
-        <h1 style="color:#f5f5f5">{{session.hall.name}}</h1>
-        {%for row in seats%}
-        <div class = "seatsRow">
-            <span class="rowMark">{{row.0.row}} row</span>
-            {%for seat in row%}
-                {%if seat.is_occupied%}
-                <div class="occupiedSeat">{{seat.seat.number}}</div>
-                {%else %}
-                <a class="nonHeaderLink" href="{% url 'ticket_confirmation' session_id=session.id seat_id=seat.id%}">
-                    <span class="seat">{{seat.number}}</span>
-                </a>
-                {%endif%}
+        <table>
+            <th><h1 style="color:#f5f5f5">{{session.hall.name}}</h1></th>
+            {%for row in seats%}
+            <tr class = "seatsRow">
+                <td class="rowMark">{{row.0.row}} row</td>
+                {%for seat in row%}
+                <td>
+                        {%if seat.is_occupied%}
+                        <div class="occupiedSeat">{{seat.seat.number}}</div>
+                        {%else %}
+                        <a class="nonHeaderLink" href="{% url 'ticket_confirmation' session_id=session.id seat_id=seat.id%}">
+                            <span class="seat">{{seat.number}}</span>
+                        </a>
+                        {%endif%}
+                    </td>
+                    {%endfor%}
+                <td class="rowMark">{{row.0.row}} row</td>
+            </tr>
             {%endfor%}
-            <div class="rowMark">{{row.0.row}} row</div>
-        </div>
-        {%endfor%}
+        </table>
     </section>
 </div>
 {% endblock %}

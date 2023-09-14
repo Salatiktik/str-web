@@ -3,12 +3,13 @@
 {% block content %}
 <div>
     <div class="pageText">
-        <h1>{{article.title}}</h1>
-        <i>{{article.date}}</i>
+        <h1 id="articleTitle">{{article.title}}</h1>
+        <date><i>{{article.date}}</i></date>
         <img class="articlePhoto" src="{{article.photo.url}}">
         <span style="white-space: pre-line">
             {{article.text}}
         </span>
+        <a class="nonHeaderLink" href="#articleTitle">To the start</a>
     </div>
 </div>
 {% endblock %}

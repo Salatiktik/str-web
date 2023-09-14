@@ -4,6 +4,11 @@
 
 <div>
     <div class="pageText">
+        <h1>Glossary</h1>
+        <div style="display:flex;flex-direction: column;">
+            <p>A <dfn>ticket</dfn>- a document, which allow you to visit our session.</p>
+            <p>A <dfn>session</dfn>- event of showing the movie.</p>
+        </div>
         <h1>Frequently Asked Questions</h1>
         <div style="display:flex;flex-direction: column;">
             {%for q in faq%}
@@ -11,7 +16,7 @@
                 <summary class="questionBlock">
                     {{q.date}} {{q.question}}
                 </summary>
-                <div class="answerBlock">{{q.answer}}</div>
+                <div class="answerBlock">{{q.answer|safe}}</div>
             </details>
             {%endfor%}
         </div>

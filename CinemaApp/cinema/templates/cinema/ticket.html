@@ -2,48 +2,63 @@
 {% block title %}Ticket confirmation page{% endblock %}
 {% block content %}
 <div>
-    <form method="post">
-        {%csrf_token%}
-        <div class = "ticket">
-            <div class ="ticketCircleRow">
-                <div class="ticketCircle"></div>
-                <div class="ticketCircle"></div>
-                <div class="ticketCircle"></div>
-                <div class="ticketCircle"></div>
-                <div class="ticketCircle"></div>
-                <div class="ticketCircle"></div>
-            </div>
-            <h0>Ticket</h0>
-            <div class = "border"></div>
-            <div class ="ticketBody">
-                <span class = "ticketMovieTitle">{{session.movie}} / {{session.type}}</span>
-                <ul>
-                    <li class = "ticketData">{{session.startDate}},{{session.startTime}}</li>
-                    <li class = "ticketData">Visitor: {{user.username}}</li>
-                    <li class = "ticketData">Seat: {{seat.row}} row, {{seat.number}} place</li>
-                    <li class = "ticketData">Seat type: {{seat.type}}</li>
-                    <li class="ticketData ">Cost: {{cost}} $</li>
-                </ul>
-                <div class="information">
-                    <div class="lycense">
-                        CULTURE CINEMA, USA, Green city, Lime drive, 53, 92101, green.cinema@gmail.com
-                    </div>
-                    <img class="qrTicket" src="{{qr.url}}">
-                </div>  
-            </div>  
-            
-            <div class = "border"></div>
-            <button type="submit" class="button">Buy</button>
-
-            <div class ="ticketCircleRow">
-                <div class="ticketCircleReverse"></div>
-                <div class="ticketCircleReverse"></div>
-                <div class="ticketCircleReverse"></div>
-                <div class="ticketCircleReverse"></div>
-                <div class="ticketCircleReverse"></div>
-                <div class="ticketCircleReverse"></div>
-            </div>
+    <div itemscope="ticket" itemtype="https://schema.org/Ticket" class = "ticket">
+        <div class ="ticketCircleRow">
+            <div class="ticketCircle"></div>
+            <div class="ticketCircle"></div>
+            <div class="ticketCircle"></div>
+            <div class="ticketCircle"></div>
+            <div class="ticketCircle"></div>
+            <div class="ticketCircle"></div>
         </div>
-    </form>
+        <h0>Ticket</h0>
+        <div class = "border"></div>
+        <div class ="ticketBody">
+            <span class = "ticketMovieTitle">{{session.movie}} / {{session.type}}</span>
+            <ul>
+                <li itemprop="dateIssued" class = "ticketData">{{session.startDate}},{{session.startTime}}</li>
+                <li class = "ticketData">Visitor: {{user.username}}</li>
+                <li class = "ticketData">Seat: {{seat.row}} row, {{seat.number}} place</li>
+                <li class = "ticketData">Seat type: {{seat.type}}</li>
+                <li class="ticketData ">Cost: {{cost}} $</li>
+            </ul>
+            <div class="information">
+                <div class="lycense">
+                    CULTURE CINEMA, USA, Green city, Lime drive, 53, 92101, green.cinema@gmail.com
+                </div>
+                <img itemprop = 'ticketToken'class="qrTicket" src="{{qr.url}}">
+            </div>  
+        </div>  
+        
+        <div class = "border"></div>
+        <button onclick="showDialog();">Buy</button>
+        <div class ="ticketCircleRow">
+            <div class="ticketCircleReverse"></div>
+            <div class="ticketCircleReverse"></div>
+            <div class="ticketCircleReverse"></div>
+            <div class="ticketCircleReverse"></div>
+            <div class="ticketCircleReverse"></div>
+            <div class="ticketCircleReverse"></div>
+        </div>
+    </div>
+    
+    <dialog id="18Dialog" style="width:300px;height:300px;left:700px;top:400px;position: absolute;" hidden><form method="post">
+        {%csrf_token%}
+        Are you already 18? <br>
+        <button>Yes</button><a href="/home"><button>No</button></a>
+    </form></dialog>
+
+    
 </div>
 {% endblock %}
+
+{%block script%}
+<script>
+    function showDialog(){
+        console.log(1)
+        console.log(document.getElementById('18Dialog'))
+        document.getElementById('18Dialog').hidden = false
+        document.getElementById('18Dialog').open = true
+    }
+</script>
+{%endblock%}

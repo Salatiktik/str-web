@@ -21,12 +21,12 @@
             <li>
                 Genres: 
                 {% for genre in movie.genre.all %}
-                    {{genre}}
+                    <span style="font-size: 10pt;">{{genre}}</span>
                 {% endfor %}
             </li>
         </ul>
         <p class = "rating">
-            {{movie.rating}} ★
+            {{rating}}/{{movie.rating}}(IMDb) ★
         </p>
 
     </div>
@@ -67,6 +67,59 @@
     </h2>
     <iframe src = "http://www.youtube.com/embed/{{movie.trailerId}}?enablejsapi=1&origin=http://example.com" type="text/html" width="980" height="550" frameborder="0"></iframe>
     <br><br>
+    <h2>
+        Reviews
+    </h2>
+    
+    {%if user.is_authenticated %}
+        <form method = "post" class = "reviewBlock" style="width: 950px; margin-bottom: 30px; background-color:#2a62ab">
+            {%csrf_token%}
+            <h3 style="margin: 0px; flex-direction: row; display: flex; color:#f5f5f5">
+            Your review
+            </h3>
+            <br>
+            <span style="margin: 0px; flex-direction: row; display: flex; color:#f5f5f5">Rating</span>
+            <input type="range" max="10" min="1" id="rating" name="rating" list="ratings" title="Rating"/>
+            <datalist id="ratings">
+                <option value="1"></option>
+                <option value="2"></option>
+                <option value="3"></option>
+                <option value="4"></option>
+                <option value="5"></option>
+                <option value="6"></option>
+                <option value="7"></option>
+                <option value="8"></option>
+                <option value="9"></option>
+                <option value="10"></option>
+            </datalist>
+            <br>
+            <span style="margin:2px; font-size: 13.7pt;color:#f5f5f5;">
+            | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+            </span>
+            <br>
+            <br>
+            <input name = "text" type="text" draggable="false" class="reviewText" style="width: 940px; height: 100px;">
+            <button type="submit">Submit</button>
+        </form>
+    {%else%}
+    <form method = "post" class = "reviewBlock" style="width: 950px; margin-bottom: 30px; background-color:#2a62ab">
+        <h3 style="margin: 0px; flex-direction: row; display: flex; color:#f5f5f5">
+            To make review you have to login or create new profile. You can do it <a style="margin:0px 10px;color:#f5f5f5"href="/login">here</a>
+        </h3>
+    </form>
+    {%endif%}
+
+
+    {%for review in reviews%}
+        <div class = "reviewBlock" style="width: 950px; margin-bottom: 30px;">
+            <span class="reviewRate" style="left: 910px">{{review.rate}} ★</span>
+            <h3 style="margin: 0px; flex-direction: row; display: flex;">
+                {{review.author}}:<a href = "{% url 'movie' movie_id=review.movie.id %}"><h3 style="margin: 0px;">{{review.movie}}</h3></a>
+            </h3>
+            <span class = "reviewsDate">{{review.date}}</span>
+            <textarea readonly draggable="false" class="reviewText" style="width: 940px; height: 100px;">{{review.text}}</textarea> 
+        </div>
+    {%endfor%}
     
 </div>
 {% endblock %}

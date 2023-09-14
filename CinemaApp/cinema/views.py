@@ -1,12 +1,14 @@
 import requests
 from django.shortcuts import render, redirect
 from .forms import LoginForm, SignUpForm
-from .models import Session, Movie, Seat, SessionSeat, Genre, News, FAQ, Review
+from .models import Session, Movie, Seat, SessionSeat, Genre, News, FAQ, Review, Employee
 from django.views import View
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
+from django.db.models import Count
 import datetime
 import logging
+import plotly.express as px
 logging.basicConfig(level=logging.INFO, filename='info.log',filemode='w',format="%(asctime)s| %(message)s")
 logging.basicConfig(level=logging.ERROR, filename='error.log',filemode='w',format="%(asctime)s| %(message)s")
 
@@ -43,15 +45,15 @@ class LoginView(View):
             username = form.cleaned_data["username"]
             password = form.cleaned_data["password"]
             user = authenticate(req, username=username,password=password)
-            logging.INFO('user {0} try to authenticate'.format(username))
+            logging.info("user {username} try to authenticate".format(username=username))
 
             if user is not None:
-                logging.INFO('user {0} authenticate'.format(username))
+                logging.info('user {0} authenticate'.format(username))
                 login(req, user)
 
                 return redirect('/home')
             else:
-                logging.ERROR('user {0} authentication error'.format(username))
+                logging.error('user {0} authentication error'.format(username))
                 return render(req,'registration/login.html',{"form":form, "error":['Wrong username or password']})
 
     def get(self, req, *args, **kwargs):
@@ -70,11 +72,11 @@ class SignUpView(View):
             user = User.objects.create_user(username=form.cleaned_data["username"],
                                             email=form.cleaned_data["email"],
                                             password=form.cleaned_data["password"])
-            logging.INFO('user {0} created'.format(user.username))
+            logging.info('user {0} created'.format(user.username))
             login(req,user)
             return redirect('/home')
         else:
-            logging.ERROR('user {0} authentication error'.format(user.username))            
+            logging.error('user {0} authentication error'.format(user.username))            
             return render(req,'registration/sign_up.html',{"form":form,"error":form.errors.values})
 
 
@@ -178,14 +180,25 @@ class SessionView(View):
         return render(req,'cinema/session.html',{"session":session,"hall":hall,"seats":seatsClear,"sessionSeats":sessionSeats,"movie":movie,"posterUrl":movie.poster.url})
     
 class MovieView(View):
+    def post(self, req, *args, movie_id, **kwargs):
+        Review.objects.create(movie=Movie.objects.get(id=movie_id),author=req.user,date=datetime.date.today(),text=req.POST.get('text'),rate=req.POST.get('rating'))
+        return redirect('/movie/{0}'.format(movie_id))
+
     def get(self, req, *args, movie_id, **kwargs):
         movie = Movie.objects.get(id=movie_id)
+        rating=0
+        reviews=Review.objects.filter(movie=movie_id)
+        for review in reviews:
+            rating+=review.rate
+
+        if(len(reviews)!=0):
+            rating=round(rating/len(reviews),1)
         sessions = []
         for i in range(7):
             sessions.append(Session.objects.filter(movie = movie, startDate__gte=datetime.date.today()+datetime.timedelta(days=i+1),
                                           startDate__lt=datetime.date.today()+datetime.timedelta(days=i+2)))
 
-        return render(req, 'cinema/movie.html', {"movie":movie,"sessions":sessions})
+        return render(req, 'cinema/movie.html', {"movie":movie, "rating":rating, "sessions":sessions,'reviews':reviews})
 
 class MoviesView(View):
     def get(self, req, *args, **kwargs):
@@ -208,7 +221,7 @@ class TicketView(View):
 
     def post(self,req,*args, session_id, seat_id,**kwargs):
         SessionSeat.objects.create(seat = Seat.objects.get(id=seat_id),session=Session.objects.get(id=session_id), is_occupied = True, user = self.request.user)
-        logging.INFO('user {0} buy ticket'.format(self.request.user.username))
+        logging.info('user {0} buy ticket'.format(self.request.user.username))
         return redirect(('/home'))
 
     def get(self, req, *args, session_id, seat_id, **kwargs):
@@ -248,3 +261,64 @@ class FAQView(View):
     def get(self, req, *args, **kwargs):
         faq = FAQ.objects.all().order_by('date')[::-1]
         return render(req, 'cinema/faq.html',{'faq':faq})
+    
+class ContactsView(View):
+    def get(self, req, *args, **kwargs):
+        contacts = Employee.objects.all()
+        return render(req, 'cinema/contacts.html',{"contacts":contacts})
+    
+class VacancyView(View):
+    def get(self, req, *args, **kwargs):
+        return render(req, 'cinema/vacancy.html',{})
+    
+class PrivacyPolicyView(View):
+    def get(self, req, *args, **kwargs):
+        return render(req, 'cinema/privacy.html',{})
+
+class PromoView(View):
+    def get(self, req, *args, **kwargs):
+        return render(req, 'cinema/promo.html',{})
+    
+class DashBoardsView(View):
+    def get(self, req, *args, **kwargs):
+        if(not User.objects.get(id=req.user.id).is_superuser):
+            return redirect('/home')
+        tickets_day = {}
+        tickets_movie= {}
+        tickets = SessionSeat.objects.values('session').annotate(tcount=Count('session')).order_by('session')
+        for i in tickets:
+            if(tickets_day.get(str(Session.objects.get(id=i['session']).startDate),0)==0):
+                tickets_day[str(Session.objects.get(id=i['session']).startDate)]=i['tcount']
+            else:
+                tickets_day[str(Session.objects.get(id=i['session']).startDate)]+=i['tcount']
+
+            if(tickets_movie.get(str(Session.objects.get(id=i['session']).movie),0)==0):
+                tickets_movie[str(Session.objects.get(id=i['session']).movie)]=i['tcount']
+            else:
+                tickets_movie[str(Session.objects.get(id=i['session']).movie)]+=i['tcount']
+
+        au=len(User.objects.all())
+        at=len(SessionSeat.objects.all())
+        ass=len(Session.objects.all())
+        am=len(Movie.objects.all())
+        tickets = SessionSeat.objects.all()
+        mg = 0
+        for i in tickets:
+            mg+=round(i.session.price*i.seat.type.rate,2)
+
+        td = px.bar(
+            x=tickets_day.keys(),
+            y=tickets_day.values(),
+            title="Amount of tickets in day",
+            labels={'x':'Date','y':'tickets amount'}
+        )
+
+        tm = px.bar(
+            x=tickets_movie.keys(),
+            y=tickets_movie.values(),
+            title="Amount of tickets for movie",
+            labels={'x':'Movies','y':'tickets amount'}
+        )
+
+        return render(req, 'cinema/dash.html',{'td':td.to_html(),'tm':tm.to_html(),'au':au,'at':at,'am':am,'ass':ass,'mg':mg})
+            

@@ -4,10 +4,27 @@
 <div>
     <h1>News</h1>
     {%for item in news%}
+    <a href="{% url 'article' news_id=item.id %}" style="text-decoration: none; color:#282828">
         <div class = "newsBlock">
-            <span class = "newsDate">{{item.date}}</span>
-            <a href="{% url 'article' news_id=item.id %}"><h3>{{item.title}}</h3></a>      
+            <img src="{{item.photo.url}}" style="border-radius: 10px; width: 200px;">
+            <div style="display: flex; flex-direction: column; margin: 10px;" >
+                <span class = "newsDate">{{item.date}}</span>
+                <h3 style="margin: 10px 0px;">{{item.title}}</h3>
+                <span name = "newsText">{{item.text}}</span>
+            </div>
         </div>
+    </a>
     {%endfor%}
 </div>
 {% endblock %}
+
+{%block script%}
+<script>
+    $(document).ready(function(){
+        array = document.getElementsByName('newsText')
+        for(var i = 0; i<array.length;i++){
+            array[i].innerHTML = array[i].innerHTML.substr(0,100)+'...'
+        }
+    })
+</script>
+{%endblock%}
