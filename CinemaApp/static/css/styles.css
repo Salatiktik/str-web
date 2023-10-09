@@ -16,15 +16,14 @@ marquee{
     color:#e9fff1;
     background-color: #98b0e7;
 }
-
-.header{
+header{
     width: 100%;
     background-color:#282828;
     display: flex;
     justify-content: space-between;
 }
 
-.footer{
+footer{
     width: 100%;
     height: 200px;
     background-color:#0d0d24;
@@ -37,18 +36,45 @@ marquee{
     display: flex;
     justify-content: start;
 }
-.link{
+
+a.link{
     color: #f5f5f5;
     font-size: 15pt;
     display: flex;
     margin: 20px;
     text-decoration: none;
 }
-
-.nonHeaderLink{
-    color: #282828;
+a.marckedLink{
+    color: #9cffbd;
+    font-size: 15pt;
+    display: flex;
+    margin: 20px 20px 20px 0px;
     text-decoration: none;
+    cursor: pointer;
 }
+a.footerLink{
+    color:#f5f5f5;
+    margin:100px 10px;
+    text-decoration: underline;
+}
+
+a.nonHeaderLink:link{
+    color:#13977a;
+    text-decoration: underline;
+}
+
+a.nonHeaderLink:visited{
+    color:#2f2f2f;
+}
+
+a.nonHeaderLink:active{
+    color: #55e5c8;
+}
+
+a.nonHeaderLink:hover{
+    color: #032a69;
+}
+
 
 .errorMessage{
     margin: 0px;
@@ -90,27 +116,8 @@ marquee{
     min-height: 720px;
     background-color: #ffffff;
 }
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-input[type='range'] {
-  width: 240px;
-  padding: 0px 5px;
-  border-radius: 5px;
-  -webkit-appearance: none;
-  background: #81f19f;
-}
 
-input[type='range']::-webkit-slider-thumb {
-  width: 15px;
-  -webkit-appearance: none;
-  height: 15px;
-  border-radius: 5px;
-  
-  cursor: ew-resize;
-  background-color: #304bad;
-  
-}
 
-}
 button{
     width: fit-content;
     font-family: 'DIN Pro Regular', sans-serif;
@@ -135,19 +142,12 @@ button{
     margin: 10px 10px 0px 10px;
     align-self: flex-start;
 }
-.marckedLink{
-    color: #9cffbd;
-    font-size: 15pt;
-    display: flex;
-    margin: 20px 20px 20px 0px;
-    text-decoration: none;
-    cursor: pointer;
-}
 
 
 h0{
     font-family: 'DIN Pro Bold', sans-serif;
     font-size: 40pt;
+    text-transform: uppercase;
 }
 h1{
     margin: 20px 0px;
@@ -158,6 +158,7 @@ h2{
     font-size: 20pt;
     font-family: 'DIN Pro Bold';
     margin: 20px 0px;
+    font-variant: small-caps;
 }
 h3{
     font-size: 20pt;
@@ -248,14 +249,6 @@ h3{
     padding: 3px;
     font-size: 12pt;
 }
-.rowMark{
-    height: 30px;
-    align-items: center;
-    justify-content: center;
-    margin: 20px;
-    font-size: 8pt;
-    color: #f5f5f5;
-}
 .ticketCircleRow{
     justify-content: space-between;
     width: 400px;
@@ -305,7 +298,7 @@ h3{
 }
 .profileTicket{
     margin: 20px 0px;
-    width: 800px;
+    width: 500px;
     height: 150px;
     background-color: #9cffbd;
     align-items: center;
@@ -332,7 +325,7 @@ h3{
     height: 30px;
 }
 .profileTicketMovie{
-    font-size: 40pt;
+    font-size: 30pt;
     font-family: 'DIN Pro Bold', sans-serif;
 }
 .profileTicketData{
@@ -341,12 +334,12 @@ h3{
     display: flex;
 }
 .profileTicketDescription{
-    margin: 40px;
+    margin: 10px;
     display: flex;
     flex-direction: column;
 }
 .profileTicketDate,.rating{
-    font-size: 25pt;
+    font-size: 20pt;
     font-family: 'DIN Pro Bold', sans-serif;
 }
 .profileTicketSeat{
@@ -362,8 +355,8 @@ h3{
     flex-direction: column;
 }
 .ticketsBlock{
-    flex-direction: row;
-    min-width: 900px;
+    display: grid;
+    grid-template-columns: 520px 500px;
 }
 .ticket{
     font-size: 40pt;
@@ -557,11 +550,7 @@ h3{
 .footerLogo{
     margin:0px 20px;
 }
-.footerLink{
-    color:#f5f5f5;
-    margin:100px 10px;
-    text-decoration: underline;
-}
+
 .pageText{
     width: 900px;
     font-size: 20pt;
@@ -604,6 +593,7 @@ h3{
     padding: 10px;
     cursor: pointer;
     border-radius: 10px;
+    float:inherit;
     margin: 0px 10px 10px 0px;
 }
 .promosBlock{
@@ -618,4 +608,118 @@ h3{
 }
 abbr{
     color:#137497;
+}
+
+td:first-child, td:last-child{
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    margin: 20px;
+    font-size: 8pt;
+    color: #f5f5f5;
+}
+
+input{
+    background-color: #d9fff7;
+}
+
+input:required{
+    background-color: #9fe882;
+}
+
+input:disabled{
+    background-color: #888888;
+}
+
+input:out-of-range{
+    background-color: rgb(255, 145, 145);
+}
+
+input[type='range'] {
+    width: 240px;
+    padding: 0px 5px;
+    border-radius: 5px;
+    -webkit-appearance: none;
+    background: #81f19f;
+  }
+  
+input[type='range']::-webkit-slider-thumb {
+    width: 15px;
+    -webkit-appearance: none;
+    height: 15px;
+    border-radius: 5px;
+    cursor: ew-resize;
+    background-color: #304bad;
+    
+}
+
+q:lang(ru) {
+    quotes: "\00AB" "\00BB";
+   }
+q:lang(en) {
+    quotes: "\201C" "\201D";
+   }
+
+p{
+    text-indent: 10px;
+    line-height: 24px;
+    word-wrap: break-word;
+}
+
+article p::first-letter{
+    color: #015b31;
+}
+
+ul{
+    list-style-type: "☺";
+}
+
+::selection{
+    color: white;
+    background-color: #13977a;
+}
+
+@media screen and (width > 800px) {
+    p.cssBlock{
+        background-color: #015b31;
+    }
+}
+
+.logo:hover, .partnerLogo:hover{
+    transform: scale(120%);
+    animation: myAnim 2s ease 0s 1 alternate forwards;
+}
+
+@keyframes myAnim {
+	0%,
+	100% {
+		transform: translateX(0%);
+		transform-origin: 50% 50%;
+	}
+
+	15% {
+		transform: translateX(-20px) rotate(6deg);
+	}
+
+	30% {
+		transform: translateX(10px) rotate(-6deg);
+	}
+
+	45% {
+		transform: translateX(-10px) rotate(3.6deg);
+	}
+
+	60% {
+		transform: translateX(6px) rotate(-2.4deg);
+	}
+
+	75% {
+		transform: translateX(-4px) rotate(1.2deg);
+	}
+}
+
+.articleColumns{
+    columns: 280px 3;
+    font-size: 12pt;
+    word-wrap: normal;
 }

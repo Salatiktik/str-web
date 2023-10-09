@@ -6,7 +6,7 @@
     <div class="moviesPage">
         <div>
             {% for movie in movies%}
-            <a class = "nonHeaderLink" href = "{% url 'movie' movie_id=movie.id %}">
+            <a style="text-decoration: none; color:#282828" href = "{% url 'movie' movie_id=movie.id %}">
                 <div class = "movieBlock">
                     <img src = "{{movie.poster.url}}" class="moviePoster">
                     <div class = "movieDescription">

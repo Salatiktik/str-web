@@ -2,14 +2,14 @@
 {% block title %}Article{% endblock %}
 {% block content %}
 <div>
-    <div class="pageText">
+    <article class="pageText">
         <h1 id="articleTitle">{{article.title}}</h1>
         <date><i>{{article.date}}</i></date>
         <img class="articlePhoto" src="{{article.photo.url}}">
-        <span style="white-space: pre-line">
+        <p style="white-space: pre-line">
             {{article.text}}
-        </span>
+        </p>
         <a class="nonHeaderLink" href="#articleTitle">To the start</a>
-    </div>
+    </article>
 </div>
 {% endblock %}

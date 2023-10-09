@@ -44,7 +44,7 @@
     {%for item in news%}
         <div class = "newsBlock">
             <span class = "newsDate">{{item.date}}</span>
-            <a href="{% url 'article' news_id=item.id %}"><h3>{{item.title}}</h3></a>    
+            <a class="nonHeaderLink" href="{% url 'article' news_id=item.id %}"><h3>{{item.title}}</h3></a>    
         </div>
     {%endfor%}
     <h2>Last reviews</h2>
@@ -53,7 +53,7 @@
             <div class = "reviewBlock">
                 <span class="reviewRate">{{review.rate}} ★</span>
                 <h3 style="margin: 0px; flex-direction: row; display: flex;">
-                    {{review.author}}:<a href = "{% url 'movie' movie_id=review.movie.id %}"><h3 style="margin: 0px;">{{review.movie}}</h3></a>
+                    {{review.author}}:<a class="nonHeaderLink" href = "{% url 'movie' movie_id=review.movie.id %}"><h3 style="margin: 0px;">{{review.movie}}</h3></a>
                 </h3>
                 <span class = "reviewsDate">{{review.date}}</span>
                 <textarea readonly draggable="false" class="reviewText">{{review.text}}</textarea> 

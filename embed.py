@@ -50,3 +50,4 @@ async def rules(ctx):
     await ctx.send(embed = embed)
 
 client.run("MTEwOTA5NjE4NjA5MjIxMjMxNw.G3HIhF.t1jnqQvUP97-VhHiTNMWQ1mIemfGJ0S6bu71WQ")
+

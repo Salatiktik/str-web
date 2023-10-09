@@ -205,6 +205,7 @@ class MoviesView(View):
         movies = Movie.objects.filter(rating__gte=float(req.GET.get('rfrom','0')) if req.GET.get('rfrom')!='' else 0,
                                       rating__lt=float(req.GET.get('rto','10')) if req.GET.get('rto')!='' else 10)
         genres = Genre.objects.all()
+        
         if(len(req.GET)>2):
             genre_filter=[]
             for genre in genres:
@@ -321,4 +322,8 @@ class DashBoardsView(View):
         )
 
         return render(req, 'cinema/dash.html',{'td':td.to_html(),'tm':tm.to_html(),'au':au,'at':at,'am':am,'ass':ass,'mg':mg})
-            
+
+class CssView(View):
+    def get(self, req, *args, **kwargs):
+        return render(req, 'cinema/cssDock.html',{})
+      

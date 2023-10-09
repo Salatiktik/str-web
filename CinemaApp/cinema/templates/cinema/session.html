@@ -15,7 +15,7 @@
                         {%if seat.is_occupied%}
                         <div class="occupiedSeat">{{seat.seat.number}}</div>
                         {%else %}
-                        <a class="nonHeaderLink" href="{% url 'ticket_confirmation' session_id=session.id seat_id=seat.id%}">
+                        <a style="text-decoration: none; color:#282828" href="{% url 'ticket_confirmation' session_id=session.id seat_id=seat.id%}">
                             <span class="seat">{{seat.number}}</span>
                         </a>
                         {%endif%}

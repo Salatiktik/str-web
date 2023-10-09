@@ -10,7 +10,7 @@
             <div style="display: flex; flex-direction: column; margin: 10px;" >
                 <span class = "newsDate">{{item.date}}</span>
                 <h3 style="margin: 10px 0px;">{{item.title}}</h3>
-                <span name = "newsText">{{item.text}}</span>
+                <span class = "newsText" style="overflow: hidden; width: 800px; height: 20px;">{{item.text}}</span>
             </div>
         </div>
     </a>
@@ -18,13 +18,3 @@
 </div>
 {% endblock %}
 
-{%block script%}
-<script>
-    $(document).ready(function(){
-        array = document.getElementsByName('newsText')
-        for(var i = 0; i<array.length;i++){
-            array[i].innerHTML = array[i].innerHTML.substr(0,100)+'...'
-        }
-    })
-</script>
-{%endblock%}

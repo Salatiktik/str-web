@@ -17,6 +17,7 @@ urlpatterns = [
     path('vacancy/', views.VacancyView.as_view(), name='vacancy'),
     path('privacy_policy/', views.PrivacyPolicyView.as_view(), name='privacy'),
     path('dashboard/', views.DashBoardsView.as_view(), name='dashboard'),
+    path('css/', views.CssView.as_view(), name='css'),
     re_path(r'^session/(?P<session_id>\d+)/$', views.SessionView.as_view(), name='session'),
     re_path(r'^movie/(?P<movie_id>\d+)/$', views.MovieView.as_view(), name='movie'),
     re_path(r'^news/(?P<news_id>\d+)/$', views.ArticleView.as_view(), name='article'),
