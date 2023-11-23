@@ -1,0 +1,78 @@
+{% extends 'cinema/base.html' %}
+{% block title %}Eleven{% endblock %}
+{% block content %}
+
+<div>
+    <form class="filterWrapper" id="form">
+        Name: <input type="text" maxlength="20" id="name">
+        <br>
+        Mid name: <input type="text" maxlength="20" id="mname">
+        <br>
+        Last name: <input type="text" maxlength="20" id="lname">
+        <br>
+        Bank account: <input type="text" id="bacc">
+        <br>
+        Money: <input type="number" id="money">$
+    </form>
+    <button onclick="addUser();">Add user</button>
+    <button onclick="task();">Task</button>
+    <ul id="list">
+
+    </ul>
+</div>
+{% endblock %}
+{%block script%}
+<script>
+    var users = []
+
+    function addUser(){
+        let name = document.getElementById('name')
+        let mname = document.getElementById('mname')
+        let lname = document.getElementById('lname')
+        let bacc = document.getElementById('bacc')
+        let money = document.getElementById('money')
+
+        if(name.value==""||mname.value==""||lname.value==""||bacc.value==""||money.value=="")
+        {
+            alert('Enter all values');
+            return;
+        }
+        else
+        {
+            alert('User'+name.value+" "+mname.value+" "+lname.value+" was saved")
+        }
+
+        if(users[name.value+" "+mname.value+" "+lname.value]){
+            users[name.value+" "+mname.value+" "+lname.value].push([bacc.value, money.value])
+        }
+        else{
+            users[name.value+" "+mname.value+" "+lname.value]=[[bacc.value, money.value]]
+        }
+
+        document.getElementById('list').innerHTML=document.getElementById('list').innerHTML+'<li>'+name.value+" "+mname.value+" "+lname.value+";"+bacc.value+";"+money.value+"</li>";
+
+    }
+
+    function task(){
+        console.log(1)
+        keys = Object.keys(users)
+        list = document.getElementById('list')
+        list.innerHTML = ""
+
+        for(var i = 0; i<keys.length;i++){
+            console.log(2)
+            if(users[keys[i]].length>1){
+                console.log(3)
+                let sum = 0;
+                for(var j=0;j<users[keys[i]].length;j++)
+                {
+                    console.log(4)
+                    sum+=parseInt(users[keys[i]][j][1]);
+                }
+                list.innerHTML=list.innerHTML+'<li>'+keys[i]+' = '+sum+'</li>';
+            }
+        }
+    }
+</script>
+{%endblock%}
+

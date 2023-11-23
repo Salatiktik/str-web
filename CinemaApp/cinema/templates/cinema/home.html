@@ -3,8 +3,19 @@
 {% block title %}Home page{% endblock %}
 {% block content %}
 <div>
+    
     <marquee >♥♥♥WELCOME TO OUR CINEMA, {{user.username}}♥♥♥&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Use promocode "CULTUREFOREVER" to buy ticket's for any movie with 30% discount. Allowed only in ticket office since 18:00 to 23:00.</marquee>
+    <h3 id = 'timer'></h3>
     <br><br>
+    
+    <form id="interval" method='post' hidden>
+        {%csrf_token%}
+        Interval in ms
+        <input type="number" name="brot">
+    </form>
+    <a>
+        <img id="banner">
+    </a>
     <h1>Home page</h1>
     <h2>Newest movies</h2>
     <section class = "newestMovies">
@@ -66,5 +77,173 @@
         <a href = 'https://www.bsuir.by/ru/fksis/studsovet'><img src=/image/ss.svg class="partnerLogo"></a>
     </div>
     <br>
+    <br>
+    <br>
+    <h2>Quiz</h2>
+    <div class="quiz">
+        <button style="width: 700px; height: 400px; border-radius: 15px; margin-top: 0px;" id="startQuiz" onclick="startQuiz();">Start quiz</button>
+        <div id="quizBody" style="justify-content: center; align-items: center;" hidden>
+            <div id="question"></div>
+            <div style="display:grid; grid-template-columns: 300px 250px ;" hidden>
+                <button style="width: 250px; height: 40px; margin-top: 20px;" id="answer1" onclick="answer(1);"></button>
+                <button style="width: 250px; height: 40px; margin-top: 20px;" id="answer2" onclick="answer(2);"></button>
+                <button style="width: 250px; height: 40px; margin-top: 20px;" id="answer3" onclick="answer(3);"></button>
+                <button style="width: 250px; height: 40px; margin-top: 20px;" id="answer4" onclick="answer(4);"></button>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
+{%block script%}
+<script>
+     document.addEventListener("DOMContentLoaded", function() {
+
+      var timerValue = localStorage.getItem("timerValue");
+      if (timerValue === null) {
+        timerValue = 60 * 60
+      } else {
+        timerValue = parseInt(timerValue);
+      }
+      starttimer(timerValue);
+    });
+
+    if('{{is_admin|escapejs}}'!='False'){
+        console.log('{{is_admin|escapejs}}')
+        document.getElementById('interval').hidden=false
+    }
+    else
+    {
+        console.log('{{is_admin|escapejs}}')
+    }
+
+    function starttimer(seconds) {
+      var timerElement = document.getElementById("timer");
+
+      var timerInterval = setInterval(function() {
+    
+        timerElement.innerHTML = formatTime(seconds);
+        seconds--;
+
+        localStorage.setItem("timerValue", seconds.toString());
+
+        if (seconds < 0) {
+          clearInterval(timerInterval);
+          timerElement.innerHTML = "Times out!";
+        }
+      }, 1000); 
+    }
+
+    function formatTime(seconds) {
+      var hours = Math.floor(seconds / 3600);
+      var minutes = Math.floor((seconds % 3600) / 60);
+      var remainingSeconds = seconds % 60;
+
+      hours = padZero(hours);
+      minutes = padZero(minutes);
+      remainingSeconds = padZero(remainingSeconds);
+
+      return hours + ":" + minutes + ":" + remainingSeconds;
+    }
+
+    function padZero(number) {
+      return number < 10 ? "0" + number : number;
+    }
+
+    let banners = jQuery.parseJSON('{{adds|escapejs}}');
+    console.log(banners)
+    let currentIndex = 0;
+    let rotationInterval;
+    let isPageFocused = true;
+
+    function startRotation() {
+        console.log('start')
+        const intervalMSeconds = '{{interval|escapejs}}';
+        rotationInterval = setInterval(rotateBanner, intervalMSeconds);
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+    }
+
+    function stopRotation() {
+        console.log('stop')
+        clearInterval(rotationInterval);
+    }
+
+    function rotateBanner() {
+        console.log('rotate')
+        currentIndex = (currentIndex + 1) % banners.length;
+        const banner = document.getElementById('banner');
+        banner.src = '/image/'+ banners[currentIndex]['py/reduce'][2].photo;
+        banner.parentElement.href = `${banners[currentIndex]['py/reduce'][2].url}`;
+    }
+
+    function handleVisibilityChange() {
+        isPageFocused = document.visibilityState === 'visible';
+
+        if (isPageFocused) {
+        startRotation();
+        } else {
+        stopRotation();
+        }
+    }
+
+    rotateBanner();
+    startRotation();
+
+    var questions = [['1 question: What is the name of the cinema?','Culture cinema','Cinematic cinema','Claus cinema','Cool cinema'],
+                     ['2 question: What colors are base of logotype?','Red and orange','Blue and cyan','Black and white','Pink and purple'],
+                     ['3 question: What was the first movie in this cinema?','Drive','Barbie','Your name','Claus'],
+                     ['4 question: How many halls do we have?','1','2','3','4']]
+    var questionCount = 0
+    var score = 0
+
+    function startQuiz(){
+        document.getElementById('startQuiz').hidden = true;
+        document.getElementById('quizBody').hidden = false;
+        setQuestion();        
+    }
+
+    function answer(ans){
+        if(ans==1&&(questionCount ==0 || questionCount==2))
+        {
+            console.log(1)
+            score++;
+        }
+        else if(ans==2&&(questionCount ==1 || questionCount==3))
+        {
+            console.log(2)
+            score++;
+        }
+        questionCount+=1;
+        if(questionCount!=4)
+        {
+            setQuestion();
+        }
+        else
+        {
+            endGame();
+        }
+    }
+
+    function setQuestion(){
+        document.getElementById('question').innerHTML = questions[questionCount][0];
+        document.getElementById('answer1').innerHTML = questions[questionCount][1];
+        document.getElementById('answer2').innerHTML = questions[questionCount][2];
+        document.getElementById('answer3').innerHTML = questions[questionCount][3];
+        document.getElementById('answer4').innerHTML = questions[questionCount][4];
+    }
+
+    function endGame(){
+        document.getElementById('startQuiz').hidden = false;
+        document.getElementById('quizBody').hidden = true;
+        if(score==4){
+            document.getElementById('startQuiz').innerHTML = 'Congrats, your score is '+ score+'\n Heres a promo for 5% discount: CULTUREQUIZ';
+        }
+        else
+        {
+            document.getElementById('startQuiz').innerHTML = 'Congrats, your score is '+ score;
+        }
+        
+        document.getElementById('startQuiz').disabled = true;
+    }
+
+</script>
+{%endblock%}

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'cinema',
+    'jsonpickle',
     'plotly',
     
 ]
@@ -135,5 +136,7 @@ LOGOUT_REDIRECT_URL = '/home'
 
 DATE_FORMAT = "Y-m-d"
 TIME_FORMAT = "%H:%M"
+
+BANNERS_ROTATION = 100
 
 FIXTURE_DIRS=(os.path.join(BASE_DIR,'fixtures'),)

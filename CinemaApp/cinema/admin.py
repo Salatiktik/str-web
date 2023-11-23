@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Movie,Genre,Hall,SeatType,Seat,Session,SessionSeat,Post,News,Review,Employee,FAQ
+from .models import Movie,Genre,Hall,SeatType,Seat,Session,SessionSeat,Post,News,Review,Employee,FAQ, Add, Promo, RotationSettings
 # Register your models here.
 admin.site.register(Genre)
 @admin.register(Movie)
@@ -34,3 +34,6 @@ admin.site.register(Review)
 admin.site.register(Post)
 admin.site.register(Employee)
 admin.site.register(FAQ)
+admin.site.register(Add)
+admin.site.register(Promo)
+admin.site.register(RotationSettings)

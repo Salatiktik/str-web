@@ -95,6 +95,7 @@ class SessionSeat(models.Model):
     is_occupied = models.BooleanField(default=False)
     seat = models.ForeignKey(Seat,  related_name="seats", on_delete=models.CASCADE)
     session = models.ForeignKey(Session, related_name="session_seats" ,on_delete=models.CASCADE)
+    final_cost = models.FloatField(default=0)
     user = models.ForeignKey(User,related_name="tickets", on_delete=models.CASCADE)
 
 class News(models.Model):
@@ -124,3 +125,14 @@ class FAQ(models.Model):
     question=models.CharField(max_length=200)
     answer = models.CharField(max_length=1000)
     date = models.DateField()
+
+class Promo(models.Model):
+    discount = models.FloatField()
+    promo = models.CharField(max_length=20)
+    
+class Add(models.Model):
+    photo = models.ImageField()
+    url = models.CharField(max_length=1000)
+
+class RotationSettings(models.Model):
+    interval = models.IntegerField(default=1000000)

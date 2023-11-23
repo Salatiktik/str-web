@@ -1,0 +1,135 @@
+{% extends 'cinema/base.html' %}
+{% block title %}Stage{% endblock %}
+{% block content %}
+  <style>
+    .stage-container {
+      position: relative;
+      width: 100%;
+      height: 1600px;
+     background-color: #202020;
+      overflow: hidden;
+    }
+
+    .curtain-left-1, .curtain-left-2, .curtain-right-1, .curtain-right-2 {
+      position: absolute;
+      border: none;
+      background-image: url('/image/c.jpg');
+      background-blend-mode: multiply;
+      background-color: #540404;
+      top: 0;
+      width: 50%;
+      height: 100%;
+    }
+
+    .curtain-left-2, .curtain-right-2 {
+
+      background-color: #df1111;
+    }
+
+    .curtain-left-1 {
+      left: 0;
+      transform-origin: right;
+    }
+
+    .curtain-left-2 {
+      left: 0;
+      transform-origin: right;
+    }
+
+    .curtain-right-1 {
+      right: 0;
+      transform:scaleX(-1);
+    }
+
+    .curtain-right-2 {
+      right: 0;
+      transform:scaleX(-1);
+    }
+
+    .stage {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .background {
+      margin-top: 800px;
+      width: 1280px;
+      height: 1200px;
+      background-image: url('/image/b.png');
+      opacity: 0;
+    }
+
+    .welcome-message {
+      position: fixed;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 36px;
+      color: #fff;
+      opacity: 0;
+    }
+  </style>
+  <div class="stage-container">
+    <div class="background" id="background"></div>
+    <div class="curtain-left-1" id="curtain-left-1"></div>
+    <div class="curtain-right-1" id="curtain-right-1"></div>
+    <div class="curtain-left-2" id="curtain-left-2"></div>
+    <div class="curtain-right-2" id="curtain-right-2"></div>
+
+    <div class="welcome-message" id="welcome-message">Welcome to Culture Cinema</div>
+  </div>
+
+  
+
+{% endblock %}
+{%block script%}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+      window.addEventListener("scroll", revealScene);
+    });
+
+    function revealScene() {
+      var curtainLeft1 = document.getElementById("curtain-left-1");
+      var curtainLeft2 = document.getElementById("curtain-left-2");
+      var curtainRight1 = document.getElementById("curtain-right-1");
+      var curtainRight2 = document.getElementById("curtain-right-2");
+      var background = document.getElementById("background");
+      var welcomeMessage = document.getElementById("welcome-message");
+
+      var scrollPosition = window.scrollY;
+      var fullHeight=972;
+      var semiWidth = 640;
+
+      curtainLeft2.style.transform = "translateX( -" + 100*scrollPosition/fullHeight + "%)";
+      curtainRight2.style.transform = "translateX(" + 100*scrollPosition/fullHeight + "%) scaleX(-1)";
+      if(scrollPosition>200){
+          curtainLeft1.style.transform = "translateX( -" + 100*(scrollPosition-200)/(fullHeight-200) + "%)";
+          curtainRight1.style.transform = "translateX(" + 100*(scrollPosition-200)/(fullHeight-200) + "%) scaleX(-1)";
+      }
+      else
+      {
+        curtainLeft1.style.transform = "translateX(0%)";
+        curtainRight1.style.transform = "translateX(0%) scaleX(-1)";
+      }
+
+      if (scrollPosition > 400) {
+        background.style.opacity = (scrollPosition - fullHeight) / fullHeight+0.5;
+        welcomeMessage.style.transform = "translate(-50%, -50%) scale(1)";
+        welcomeMessage.style.opacity = (scrollPosition - fullHeight) / fullHeight+0.5;
+      } else {
+        background.style.opacity = 0;
+        welcomeMessage.style.transform = "translate(-50%, -50%) scale(0)";
+        welcomeMessage.style.opacity = 0;
+      }
+    }
+  </script>
+{%endblock%}
+

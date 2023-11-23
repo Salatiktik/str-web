@@ -1,11 +1,12 @@
 import requests
 from django.shortcuts import render, redirect
 from .forms import LoginForm, SignUpForm
-from .models import Session, Movie, Seat, SessionSeat, Genre, News, FAQ, Review, Employee
+from .models import Session, Movie, Seat, SessionSeat, Genre, News, FAQ, Review, Employee, Add, Promo, RotationSettings
 from django.views import View
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.db.models import Count
+import jsonpickle
 import datetime
 import logging
 import plotly.express as px
@@ -13,8 +14,20 @@ logging.basicConfig(level=logging.INFO, filename='info.log',filemode='w',format=
 logging.basicConfig(level=logging.ERROR, filename='error.log',filemode='w',format="%(asctime)s| %(message)s")
 
 class HomeView(View):
+
+    def post(self, req, *args, **kwargs):
+        if(not User.objects.get(id=req.user.id).is_superuser):
+            return redirect('/home')
+        
+        r = RotationSettings.objects.get(id=1) 
+        r.interval = req.POST.get('brot')
+        r.save()
+        return redirect('/home')
+
     def get(self, req, *args, **kwargs):
         
+        adds = Add.objects.all()
+
         newestAddedMovies=Movie.objects.all()[0:3]
         news = (News.objects.all().order_by('date')[::-1])[:3]
         
@@ -34,7 +47,12 @@ class HomeView(View):
 
                 sessionsFiltered[len(sessionsFiltered)-1].append(sessions[j])
 
-        return render(req,'cinema/home.html',{"newest":newestAddedMovies,'day':sessionsFiltered,'news':news,'reviews':reviews})
+        if(not req.user.is_anonymous):
+            is_admin = User.objects.get(id=req.user.id).is_superuser
+        else:
+            is_admin = False
+
+        return render(req,'cinema/home.html',{"newest":newestAddedMovies,'day':sessionsFiltered,'news':news,'reviews':reviews,'adds':jsonpickle.encode(list(adds)),'is_admin':is_admin,'interval':RotationSettings.objects.get(id=1).interval})
 
 class LoginView(View):
     form_class = LoginForm
@@ -221,7 +239,7 @@ class MoviesView(View):
 class TicketView(View):
 
     def post(self,req,*args, session_id, seat_id,**kwargs):
-        SessionSeat.objects.create(seat = Seat.objects.get(id=seat_id),session=Session.objects.get(id=session_id), is_occupied = True, user = self.request.user)
+        SessionSeat.objects.create(seat = Seat.objects.get(id=seat_id),finall_cost = req.POST.get('costIn') ,session=Session.objects.get(id=session_id), is_occupied = True, user = self.request.user)
         logging.info('user {0} buy ticket'.format(self.request.user.username))
         return redirect(('/home'))
 
@@ -229,12 +247,14 @@ class TicketView(View):
         if req.user.is_anonymous:
             return redirect('/login')
         
+        promocode = Promo.objects.all()
+
         self.seat_id = seat_id
         self.session_id = session_id
         session = Session.objects.get(id=session_id)
         seat = Seat.objects.get(id=seat_id)
         qr = requests.get("https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=seat{0}session{1}&color=5fa278&bgcolor=97edb6".format(seat_id,session_id))
-        return render(req,'cinema/ticket.html',{"session":session,"seat":seat,"qr":qr,'cost':seat.type.rate*session.price})
+        return render(req,'cinema/ticket.html',{"session":session,"seat":seat,"qr":qr,'cost':seat.type.rate*session.price,'promo':jsonpickle.encode(list(promocode))})
     
 class ProfileView(View):
     def get(self, req, *args, **kwargs):
@@ -258,6 +278,19 @@ class AboutView(View):
     def get(self,req,*args,**kwargs):
         return render(req,'cinema/about.html',{})
     
+class ScrollView(View):
+    def get(self,req,*args,**kwargs):
+        return render(req,'cinema/scroll.html',{})
+
+class CustomView(View):
+    def get(self,req,*args,**kwargs):
+        return render(req,'cinema/custom.html',{})
+
+class TableView(View):
+    def get(self,req,*args,**kwargs):
+        return render(req,'cinema/table.html',{})
+
+
 class FAQView(View):
     def get(self, req, *args, **kwargs):
         faq = FAQ.objects.all().order_by('date')[::-1]
@@ -327,3 +360,6 @@ class CssView(View):
     def get(self, req, *args, **kwargs):
         return render(req, 'cinema/cssDock.html',{})
       
+class Eleven(View):
+    def get(self, req, *args, **kwargs):
+        return render(req, 'cinema/eleven.html',{})

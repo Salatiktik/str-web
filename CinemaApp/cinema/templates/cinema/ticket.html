@@ -13,15 +13,16 @@
         </div>
         <h0>Ticket</h0>
         <div class = "border"></div>
-        <div class ="ticketBody">
+        <div id = 'ticketBody' class ="ticketBody">
             <span class = "ticketMovieTitle">{{session.movie}} / {{session.type}}</span>
             <ul>
                 <li itemprop="dateIssued" class = "ticketData">{{session.startDate}},{{session.startTime}}</li>
                 <li class = "ticketData">Visitor: {{user.username}}</li>
                 <li class = "ticketData">Seat: {{seat.row}} row, {{seat.number}} place</li>
                 <li class = "ticketData">Seat type: {{seat.type}}</li>
-                <li class="ticketData ">Cost: {{cost}} $</li>
+                <li class="ticketData ">Cost: <span id = "cost">{{cost}}</span> $</li>
             </ul>
+            <input type="text" maxlength="20" placeholder="promocode" id="promo">
             <div class="information">
                 <div class="lycense">
                     CULTURE CINEMA, USA, Green city, Lime drive, 53, 92101, green.cinema@gmail.com
@@ -31,7 +32,7 @@
         </div>  
         
         <div class = "border"></div>
-        <button onclick="showDialog();">Buy</button>
+        <button onclick="confirmTicket();">Buy</button>
         <div class ="ticketCircleRow">
             <div class="ticketCircleReverse"></div>
             <div class="ticketCircleReverse"></div>
@@ -42,11 +43,15 @@
         </div>
     </div>
     
-    <dialog id="18Dialog" style="width:300px;height:300px;left:700px;top:400px;position: absolute;" hidden><form method="post">
+    <dialog id="18Dialog" style="width:300px;height:300px;left:700px;top:400px;position: absolute;" hidden><form id="ticketRegs" method="post">
         {%csrf_token%}
+        <input type='number' name="costIn" id='costIn' hidden>
         Are you already 18? <br>
-        <button>Yes</button><a href="/home"><button>No</button></a>
-    </form></dialog>
+    </form>
+    Enter your birthday <input id="dateInput" type="date">
+    <button onclick="enterDate();" >Enter</button>
+    <a href="/home"><button>No</button></a>
+    </dialog>
 
     
 </div>
@@ -54,11 +59,77 @@
 
 {%block script%}
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      window.addEventListener("mousemove", mouse);
+    });
+
+    
+    const ticket = document.getElementById('ticketBody'),
+    walk = {x: 80, y: 50}
+
+    function mouse(e){
+        const width = 1600,
+        height = 1000;
+  
+        let { offsetX: x, offsetY: y} = e;
+        
+        const xWalk = Math.round((e.x / width / 2 * walk.x) - (walk.x / 4)),
+                yWalk = Math.round((e.y / height / 2  * walk.y) - (walk.y / 4));
+        
+        ticket.style.transform = `rotateY(${-xWalk}deg) rotateX(${yWalk}deg)`;
+    }
+
+    function confirmTicket(){
+        promo = document.getElementById('promo').value
+        promoArr = jQuery.parseJSON('{{promo|escapejs}}')
+        for (var i = 0; i < promoArr.length;i++){
+            if(promoArr[i]['py/reduce'][2]['promo']==promo)
+            {
+                document.getElementById('cost').innerHTML = '{{cost|escapejs}}' - '{{cost|escapejs}}' * promoArr[i]['py/reduce'][2]['discount'] / 100
+                alert('Promo was apply')
+                return showDialog();
+            }
+        }
+        alert('Promocode wasnt apply')
+        showDialog();
+    }
+
     function showDialog(){
-        console.log(1)
         console.log(document.getElementById('18Dialog'))
+        document.getElementById('costIn').value = document.getElementById('cost') 
         document.getElementById('18Dialog').hidden = false
         document.getElementById('18Dialog').open = true
     }
+
+    function enterDate(){
+      var birthDate = new Date(document.getElementById('dateInput').value);
+      var currentDate = new Date();
+
+      var age = currentDate.getFullYear() - birthDate.getFullYear();
+
+      if (currentDate.getMonth() < birthDate.getMonth() ||
+          (currentDate.getMonth() === birthDate.getMonth() && currentDate.getDate() < birthDate.getDate())) {
+        age--;
+      }
+
+      var days = [  'Sun',
+                    'Mon',
+                    'Tue',
+                    'Wen',
+                    'Thu',
+                    'Fri',
+                    'Sst' ];
+
+      alert('Day of week:'+days[currentDate.getDay()])
+
+      if(age<18)
+      {
+        alert('Your age must been 18 or higher, sorry, you cant use our website without your parents permissions')
+      }
+      else{
+        document.getElementById('ticketRegs').submit()
+      }
+    }
+
 </script>
 {%endblock%}
