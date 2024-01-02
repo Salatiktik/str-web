@@ -1,0 +1,4 @@
+Django==4.2.1
+django-extensions==3.2.1
+jsonpickle==3.0.2
+plotly==5.16.1
