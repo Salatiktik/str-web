@@ -1,6 +1,7 @@
 # README
 ## str-web project "Cinema"
 This project was created as lab task. Stack of technologies: python, django, html, css, js.
+## start
 1. **Clone the repository**
 2. **Set up a virtual environment (recommended)**
 ```python -m venv venv```
